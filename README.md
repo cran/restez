@@ -2,50 +2,98 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <!-- devtools::rmarkdown::render("README.Rmd") -->
 <!-- Rscript -e "library(knitr); knit('README.Rmd')" -->
-Locally query GenBank <img src="https://raw.githubusercontent.com/ropensci/restez/master/logo.png" height="200" align="right"/>
-===============================================================================================================================
 
-[![Build Status](https://travis-ci.org/ropensci/restez.svg?branch=master)](https://travis-ci.org/ropensci/restez) [![Coverage Status](https://coveralls.io/repos/github/ropensci/restez/badge.svg?branch=master)](https://coveralls.io/github/ropensci/restez?branch=master) [![ROpenSci status](https://badges.ropensci.org/232_status.svg)](https://github.com/ropensci/onboarding/issues/232) <!--[![CRAN downloads](http://cranlogs.r-pkg.org/badges/grand-total/restez)](https://CRAN.R-project.org/package=restez)--> [![DOI](https://zenodo.org/badge/129107980.svg)](https://zenodo.org/badge/latestdoi/129107980)
+# Locally query GenBank <img src="https://raw.githubusercontent.com/ropensci/restez/master/logo.png" height="200" align="right"/>
 
-Download parts of [NCBI's GenBank](https://www.ncbi.nlm.nih.gov/nuccore) to a local folder and create a simple SQL-like database. Use 'get' tools to query the database by accession IDs. [rentrez](https://github.com/ropensci/rentrez) wrappers are available, so that if sequences are not available locally they can be searched for online through [Entrez](https://www.ncbi.nlm.nih.gov/books/NBK25500/).
+[![R-CMD-check](https://github.com/ropensci/restez/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci/restez/actions)
+[![Coverage
+Status](https://coveralls.io/repos/github/ropensci/restez/badge.svg?branch=master)](https://coveralls.io/github/ropensci/restez?branch=master)
+[![ROpenSci
+status](https://badges.ropensci.org/232_status.svg)](https://github.com/ropensci/software-review/issues/232)
+[![CRAN
+downloads](http://cranlogs.r-pkg.org/badges/grand-total/restez)](https://CRAN.R-project.org/package=restez)
+[![DOI](https://zenodo.org/badge/129107980.svg)](https://zenodo.org/badge/latestdoi/129107980)
+[![status](https://joss.theoj.org/papers/10.21105/joss.01102/status.svg)](https://joss.theoj.org/papers/10.21105/joss.01102)
 
-See the [detailed tutorials](https://ropensci.github.io/restez/articles/restez.html) for more information.
+> NOTE: `restez` is no longer available on CRAN due to the archiving of
+> a key dependency
+> ([MonetDBLite](https://github.com/MonetDB/MonetDBLite-R)). It can
+> still be installed via GitHub. The issue is being dealt with and
+> hopefully a new version of `restez` will be available on CRAN soon.
 
-Introduction
-------------
+> ADDITIONAL NOTE (2022-07-07): MonetDBLite has now been replaced with
+> [duckdb](https://github.com/duckdb/duckdb) in version 2.0.0, which
+> should allow for submission to CRAN. Because of this change, restez
+> v2.0.0 or higher **is not compatible with databases built with
+> previous versions of restez**.
 
-*Vous entrez, vous rentrez et, maintenant, vous .... restez!*
+Download parts of [NCBI’s GenBank](https://www.ncbi.nlm.nih.gov/nuccore)
+to a local folder and create a simple SQL-like database. Use ‘get’ tools
+to query the database by accession IDs.
+[rentrez](https://github.com/ropensci/rentrez) wrappers are available,
+so that if sequences are not available locally they can be searched for
+online through [Entrez](https://www.ncbi.nlm.nih.gov/books/NBK25500/).
 
-Downloading sequences and sequence information from GenBank and related NCBI taxonomic databases is often performed via the NCBI API, Entrez. Entrez, however, has a limit on the number of requests and downloading large amounts of sequence data in this way can be inefficient. For programmatic situations where multiple Entrez calls are made, downloading may take days, weeks or even months.
+See the [detailed
+tutorials](https://docs.ropensci.org/restez/articles/restez.html) for
+more information.
 
-This package aims to make sequence retrieval more efficient by allowing a user to download large sections of the GenBank database to their local machine and query this local database either through package specific functions or Entrez wrappers. This process is more efficient as GenBank downloads are made via NCBI's FTP using compressed sequence files. With a good internet connection and a middle-of-the-road computer, a database comprising 20 GB of sequence information can be generated in less than 10 minutes.
+## Introduction
+
+*Vous entrez, vous rentrez et, maintenant, vous …. restez!*
+
+Downloading sequences and sequence information from GenBank and related
+NCBI taxonomic databases is often performed via the NCBI API, Entrez.
+Entrez, however, has a limit on the number of requests and downloading
+large amounts of sequence data in this way can be inefficient. For
+programmatic situations where multiple Entrez calls are made,
+downloading may take days, weeks or even months.
+
+This package aims to make sequence retrieval more efficient by allowing
+a user to download large sections of the GenBank database to their local
+machine and query this local database either through package specific
+functions or Entrez wrappers. This process is more efficient as GenBank
+downloads are made via NCBI’s FTP using compressed sequence files. With
+a good internet connection and a middle-of-the-road computer, a database
+comprising 20 GB of sequence information can be generated in less than
+10 minutes.
 
 <img src="https://raw.githubusercontent.com/ropensci/restez/master/paper/outline.png" height="500" align="center"/>
 
-Installation
-------------
+## Installation
 
-You can install `restez` from GitHub with:
+<!--
+`restez` is available via CRAN and can be installed:
+
+
+```r
+install.packages("restez")
+```
+-->
+
+The package can currently only be installed through GitHub:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("ropensci/restez")
+# install.packages("remotes")
+remotes::install_github("ropensci/restez")
 ```
 
-Quick Examples
---------------
+(It was previously available via CRAN but was archived due to a key
+dependency [MonetDBLite](https://github.com/MonetDB/MonetDBLite-R) being
+no longer available.)
 
-> For more detailed information on the package's functions and detailed guides on downloading, constructing and querying a database, see the [detailed tutorials](https://ropensci.github.io/restez/articles/restez.html).
+## Quick Examples
+
+> For more detailed information on the package’s functions and detailed
+> guides on downloading, constructing and querying a database, see the
+> [detailed
+> tutorials](https://docs.ropensci.org/restez/articles/restez.html).
 
 ### Setup
 
 ``` r
 # Warning: running these examples may take a few minutes
 library(restez)
-#> -------------
-#> restez v1.0.0
-#> -------------
-#> Remember to restez_path_set() and, then, restez_connect()
 # choose a location to store GenBank files
 restez_path_set(rstz_pth)
 ```
@@ -60,9 +108,6 @@ db_create()
 ### Query
 
 ``` r
-# connect, ensure safe disconnect after finishing
-restez_connect()
-#> Remember to run `restez_disconnect()`
 # get a random accession ID from the database
 id <- sample(list_db_ids(), 1)
 #> Warning in list_db_ids(): Number of ids returned was limited to [100].
@@ -71,11 +116,11 @@ id <- sample(list_db_ids(), 1)
 # sequences
 seq <- gb_sequence_get(id)[[1]]
 str(seq)
-#>  chr "GATCCGGCCGCAGCCGCAGTGTCGGCATTGTTCCCGCTGGGCGAGACGGAGATCACCCTCACGGTCTTCTCGGGCGATCAGTCCGACGCCGAGACGACGACGGTGACGATC"| __truncated__
+#>  chr "ACTACTAACTTCAGCCTATCTAGCACTACACCTTCAACATCTCCAGCACTACACCTTCAACATCTCCAGCACTACACCTTCAACATCTCCAGCACTACACCTTCAACATCT"| __truncated__
 # definitions
 def <- gb_definition_get(id)[[1]]
 print(def)
-#> [1] "Unidentified clone B15 DNA sequence from ocean beach sand"
+#> [1] "Unidentified sequence clone 1 amplified using OIE white spot virus primers"
 # organisms
 org <- gb_organism_get(id)[[1]]
 print(org)
@@ -83,43 +128,52 @@ print(org)
 # or whole records
 rec <- gb_record_get(id)[[1]]
 cat(rec)
-#> LOCUS       AF298094                 581 bp    DNA     linear   UNA 23-NOV-2000
-#> DEFINITION  Unidentified clone B15 DNA sequence from ocean beach sand.
-#> ACCESSION   AF298094
-#> VERSION     AF298094.1
+#> LOCUS       AY703870                 952 bp    DNA     linear   UNA 21-JAN-2005
+#> DEFINITION  Unidentified sequence clone 1 amplified using OIE white spot virus
+#>             primers.
+#> ACCESSION   AY703870
+#> VERSION     AY703870.1
 #> KEYWORDS    .
 #> SOURCE      unidentified
 #>   ORGANISM  unidentified
 #>             unclassified sequences.
-#> REFERENCE   1  (bases 1 to 581)
-#>   AUTHORS   Naviaux,R.K.
-#>   TITLE     Sand DNA: a multigenomic library on the beach
-#>   JOURNAL   Unpublished
-#> REFERENCE   2  (bases 1 to 581)
-#>   AUTHORS   Naviaux,R.K.
+#> REFERENCE   1  (bases 1 to 952)
+#>   AUTHORS   Claydon,K., Cullen,B. and Owens,L.
+#>   TITLE     OIE white spot syndrome virus PCR gives false-positive results in
+#>             Cherax quadricarinatus
+#>   JOURNAL   Dis. Aquat. Org. 62 (3), 265-268 (2004)
+#>    PUBMED   15672884
+#> REFERENCE   2  (bases 1 to 952)
+#>   AUTHORS   Claydon,K., Cullen,B. and Owens,L.
 #>   TITLE     Direct Submission
-#>   JOURNAL   Submitted (21-AUG-2000) Medicine, University of California, San
-#>             Diego School of Medicine, 200 West Arbor Drive, San Diego, CA
-#>             92103-8467, USA
+#>   JOURNAL   Submitted (01-AUG-2004) Biomedical Sciences, James Cook University,
+#>             Solander Drive, Townsville, Qld 4811, Australia
 #> FEATURES             Location/Qualifiers
-#>      source          1..581
+#>      source          1..952
 #>                      /organism="unidentified"
 #>                      /mol_type="genomic DNA"
 #>                      /db_xref="taxon:32644"
-#>                      /clone="B15"
-#>                      /note="anonymous environmental sample sequence from ocean
-#>                      beach sand"
+#>                      /clone="1"
+#>      misc_feature    1..952
+#>                      /note="false-positive sequence amplified using OIE white
+#>                      spot virus primers"
 #> ORIGIN      
-#>         1 gatccggccg cagccgcagt gtcggcattg ttcccgctgg gcgagacgga gatcaccctc
-#>        61 acggtcttct cgggcgatca gtccgacgcc gagacgacga cggtgacgat cgaggacacg
-#>       121 accgcgccga cgttcaccca cgcactgggt gatgtccttc cgatggtgac gaaggaggca
-#>       181 acggagcccg gagggcatga cttcagcccg gccacgccgg acgcctggga ccatggagac
-#>       241 agcgacctcg acatcgcttg cggtacggaa ctcccgcatc tcttcccgat cggggataca
-#>       301 gagatcacct ggacggcgac ggacgatcag gacctttcga cgacggcaac gcagatcatc
-#>       361 cggatcgagg acaacacgcc gccgaccttc atccagcgcg atgatcaggt cgtggcgacc
-#>       421 acgtacgatc cggtcggtct caggaaggag cacgttccgc tcgcgggcac cgtcatcgcg
-#>       481 gtggacttcg gacagcccgt accgctcacg aacaccgccc cggacgtntt tcggttgggg
-#>       541 agcacggaga tncctggacc gcgacggtgc gtncgggaac t
+#>         1 actactaact tcagcctatc tagcactaca ccttcaacat ctccagcact acaccttcaa
+#>        61 catctccagc actacacctt caacatctcc agcactacac cttcaacatc tccagcacta
+#>       121 caccttcaac atctccagca ctacaccttc aacatctcca gcactacacc ttcagcatct
+#>       181 ccagcactac accttcaaca tctccagcac tacatcttca acatctccag cactacacct
+#>       241 tcaacatctc cagcactaca ccttcaacat ctccagcact acaccttcaa catctccagc
+#>       301 actacacctt caacatctcc agcactacac cttcaacatc tccagcatta cacctttagc
+#>       361 atcaccacca ccaccttcaa catcaccacc actacctgca gcactctacc ttcatctaca
+#>       421 gtcaagaccc ccaacgtccg ttaagaccaa tgccaagaag ctagatgttt ccaacttgaa
+#>       481 ggaattctcc tctagtttgt tcccttgtag tatttctcta atggggctgg ggaagaggta
+#>       541 gagggaaggt agagaggaaa aggataaggg agagagggaa agatggaaga ggagaggaag
+#>       601 aacgacagaa gaatggattt atgaagaaga gaaggagtag taggaggaga aagagtacgt
+#>       661 aagtgcacat gggaagcaga cagcagcaga cattactgtc tacaaggaag ctatctgggg
+#>       721 agcactaaca atagtccagc taactactcc ttactggata aatgaccata atttttaaag
+#>       781 gggtggaccg gtaagccagc ggaaggcctc ggtcagatga ccaaaagctc caaaggcggg
+#>       841 tcatcatctg actaagaccc gcgtcaggaa acatttatcc tgtttcctga cgaaccttac
+#>       901 ctaacctaac ctaacctcct tactggaatc tagataggat gaagttagta gt
 #> //
 ```
 
@@ -129,32 +183,42 @@ cat(rec)
 # use the entrez_* wrappers to access GB data
 res <- entrez_fetch(db = 'nucleotide', id = id, rettype = 'fasta')
 cat(res)
-#> >AF298094.1 Unidentified clone B15 DNA sequence from ocean beach sand
-#> GATCCGGCCGCAGCCGCAGTGTCGGCATTGTTCCCGCTGGGCGAGACGGAGATCACCCTCACGGTCTTCT
-#> CGGGCGATCAGTCCGACGCCGAGACGACGACGGTGACGATCGAGGACACGACCGCGCCGACGTTCACCCA
-#> CGCACTGGGTGATGTCCTTCCGATGGTGACGAAGGAGGCAACGGAGCCCGGAGGGCATGACTTCAGCCCG
-#> GCCACGCCGGACGCCTGGGACCATGGAGACAGCGACCTCGACATCGCTTGCGGTACGGAACTCCCGCATC
-#> TCTTCCCGATCGGGGATACAGAGATCACCTGGACGGCGACGGACGATCAGGACCTTTCGACGACGGCAAC
-#> GCAGATCATCCGGATCGAGGACAACACGCCGCCGACCTTCATCCAGCGCGATGATCAGGTCGTGGCGACC
-#> ACGTACGATCCGGTCGGTCTCAGGAAGGAGCACGTTCCGCTCGCGGGCACCGTCATCGCGGTGGACTTCG
-#> GACAGCCCGTACCGCTCACGAACACCGCCCCGGACGTNTTTCGGTTGGGGAGCACGGAGATNCCTGGACC
-#> GCGACGGTGCGTNCGGGAACT
+#> >AY703870.1 Unidentified sequence clone 1 amplified using OIE white spot virus primers
+#> ACTACTAACTTCAGCCTATCTAGCACTACACCTTCAACATCTCCAGCACTACACCTTCAACATCTCCAGC
+#> ACTACACCTTCAACATCTCCAGCACTACACCTTCAACATCTCCAGCACTACACCTTCAACATCTCCAGCA
+#> CTACACCTTCAACATCTCCAGCACTACACCTTCAGCATCTCCAGCACTACACCTTCAACATCTCCAGCAC
+#> TACATCTTCAACATCTCCAGCACTACACCTTCAACATCTCCAGCACTACACCTTCAACATCTCCAGCACT
+#> ACACCTTCAACATCTCCAGCACTACACCTTCAACATCTCCAGCACTACACCTTCAACATCTCCAGCATTA
+#> CACCTTTAGCATCACCACCACCACCTTCAACATCACCACCACTACCTGCAGCACTCTACCTTCATCTACA
+#> GTCAAGACCCCCAACGTCCGTTAAGACCAATGCCAAGAAGCTAGATGTTTCCAACTTGAAGGAATTCTCC
+#> TCTAGTTTGTTCCCTTGTAGTATTTCTCTAATGGGGCTGGGGAAGAGGTAGAGGGAAGGTAGAGAGGAAA
+#> AGGATAAGGGAGAGAGGGAAAGATGGAAGAGGAGAGGAAGAACGACAGAAGAATGGATTTATGAAGAAGA
+#> GAAGGAGTAGTAGGAGGAGAAAGAGTACGTAAGTGCACATGGGAAGCAGACAGCAGCAGACATTACTGTC
+#> TACAAGGAAGCTATCTGGGGAGCACTAACAATAGTCCAGCTAACTACTCCTTACTGGATAAATGACCATA
+#> ATTTTTAAAGGGGTGGACCGGTAAGCCAGCGGAAGGCCTCGGTCAGATGACCAAAAGCTCCAAAGGCGGG
+#> TCATCATCTGACTAAGACCCGCGTCAGGAAACATTTATCCTGTTTCCTGACGAACCTTACCTAACCTAAC
+#> CTAACCTCCTTACTGGAATCTAGATAGGATGAAGTTAGTAGT
 # if the id is not in the local database
 # these wrappers will search online via the rentrez package
 res <- entrez_fetch(db = 'nucleotide', id = c('S71333.1', id),
                     rettype = 'fasta')
 #> [1] id(s) are unavailable locally, searching online.
 cat(res)
-#> >AF298094.1 Unidentified clone B15 DNA sequence from ocean beach sand
-#> GATCCGGCCGCAGCCGCAGTGTCGGCATTGTTCCCGCTGGGCGAGACGGAGATCACCCTCACGGTCTTCT
-#> CGGGCGATCAGTCCGACGCCGAGACGACGACGGTGACGATCGAGGACACGACCGCGCCGACGTTCACCCA
-#> CGCACTGGGTGATGTCCTTCCGATGGTGACGAAGGAGGCAACGGAGCCCGGAGGGCATGACTTCAGCCCG
-#> GCCACGCCGGACGCCTGGGACCATGGAGACAGCGACCTCGACATCGCTTGCGGTACGGAACTCCCGCATC
-#> TCTTCCCGATCGGGGATACAGAGATCACCTGGACGGCGACGGACGATCAGGACCTTTCGACGACGGCAAC
-#> GCAGATCATCCGGATCGAGGACAACACGCCGCCGACCTTCATCCAGCGCGATGATCAGGTCGTGGCGACC
-#> ACGTACGATCCGGTCGGTCTCAGGAAGGAGCACGTTCCGCTCGCGGGCACCGTCATCGCGGTGGACTTCG
-#> GACAGCCCGTACCGCTCACGAACACCGCCCCGGACGTNTTTCGGTTGGGGAGCACGGAGATNCCTGGACC
-#> GCGACGGTGCGTNCGGGAACT
+#> >AY703870.1 Unidentified sequence clone 1 amplified using OIE white spot virus primers
+#> ACTACTAACTTCAGCCTATCTAGCACTACACCTTCAACATCTCCAGCACTACACCTTCAACATCTCCAGC
+#> ACTACACCTTCAACATCTCCAGCACTACACCTTCAACATCTCCAGCACTACACCTTCAACATCTCCAGCA
+#> CTACACCTTCAACATCTCCAGCACTACACCTTCAGCATCTCCAGCACTACACCTTCAACATCTCCAGCAC
+#> TACATCTTCAACATCTCCAGCACTACACCTTCAACATCTCCAGCACTACACCTTCAACATCTCCAGCACT
+#> ACACCTTCAACATCTCCAGCACTACACCTTCAACATCTCCAGCACTACACCTTCAACATCTCCAGCATTA
+#> CACCTTTAGCATCACCACCACCACCTTCAACATCACCACCACTACCTGCAGCACTCTACCTTCATCTACA
+#> GTCAAGACCCCCAACGTCCGTTAAGACCAATGCCAAGAAGCTAGATGTTTCCAACTTGAAGGAATTCTCC
+#> TCTAGTTTGTTCCCTTGTAGTATTTCTCTAATGGGGCTGGGGAAGAGGTAGAGGGAAGGTAGAGAGGAAA
+#> AGGATAAGGGAGAGAGGGAAAGATGGAAGAGGAGAGGAAGAACGACAGAAGAATGGATTTATGAAGAAGA
+#> GAAGGAGTAGTAGGAGGAGAAAGAGTACGTAAGTGCACATGGGAAGCAGACAGCAGCAGACATTACTGTC
+#> TACAAGGAAGCTATCTGGGGAGCACTAACAATAGTCCAGCTAACTACTCCTTACTGGATAAATGACCATA
+#> ATTTTTAAAGGGGTGGACCGGTAAGCCAGCGGAAGGCCTCGGTCAGATGACCAAAAGCTCCAAAGGCGGG
+#> TCATCATCTGACTAAGACCCGCGTCAGGAAACATTTATCCTGTTTCCTGACGAACCTTACCTAACCTAAC
+#> CTAACCTCCTTACTGGAATCTAGATAGGATGAAGTTAGTAGT
 #> 
 #> >S71333.1 alpha 1,3 galactosyltransferase [New World monkeys, mermoset lymphoid cell line B95.8, mRNA Partial, 1131 nt]
 #> ATGAATGTCAAAGGAAAAGTAATTCTGTCGATGCTGGTTGTCTCAACTGTGATTGTTGTGTTTTGGGAAT
@@ -174,36 +238,38 @@ cat(res)
 #> CCTAAACAAGTATTTCCTTCTCAACAAACCCTCTAAAATCTTATCTCCAGAATACTGCTGGGATTATCAT
 #> ATAGGCCTGCCTTCAGATATTAAAACTGTCAAGCTATCATGGCAAACAAAAGAGTATAATTTGGTTAGAA
 #> AGAATGTCTGA
-restez_disconnect()
 ```
 
-Contributing
-------------
+## Contributing
 
-Want to contribute? Check the [contributing page](https://ropensci.github.io/restez/CONTRIBUTING.html).
+Want to contribute? Check the [contributing
+page](https://docs.ropensci.org/restez/CONTRIBUTING.html).
 
-Version
--------
-
-Release version 1.
-
-Licence
--------
+## Licence
 
 MIT
 
-References
-----------
+## Citation
 
-Benson, D. A., Karsch-Mizrachi, I., Clark, K., Lipman, D. J., Ostell, J., & Sayers, E. W. (2012). GenBank. *Nucleic Acids Research*, 40(Database issue), D48–D53. <http://doi.org/10.1093/nar/gkr1202>
+Bennett et al. (2018). restez: Create and Query a Local Copy of GenBank
+in R. *Journal of Open Source Software*, 3(31), 1102.
+<https://doi.org/10.21105/joss.01102>
 
-Winter DJ. (2017) rentrez: An R package for the NCBI eUtils API. *PeerJ Preprints* 5:e3179v2 <https://doi.org/10.7287/peerj.preprints.3179v2>
+## References
 
-Maintainer
-----------
+Benson, D. A., Karsch-Mizrachi, I., Clark, K., Lipman, D. J., Ostell,
+J., & Sayers, E. W. (2012). GenBank. *Nucleic Acids Research*,
+40(Database issue), D48–D53. <http://doi.org/10.1093/nar/gkr1202>
 
-[Dom Bennett](https://github.com/DomBennett)
+Winter DJ. (2017) rentrez: An R package for the NCBI eUtils API. *PeerJ
+Preprints* 5:e3179v2 <https://doi.org/10.7287/peerj.preprints.3179v2>
+
+## Maintainer
+
+[Joel Nitta](https://github.com/joelnitta)
+
+This package previously developed and maintained by Dom Bennett
 
 ------------------------------------------------------------------------
 
-[![ropensci\_footer](http://ropensci.org/public_images/ropensci_footer.png)](http://ropensci.org)
+[![ropensci_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)

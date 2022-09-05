@@ -4,7 +4,13 @@
 \alias{gb_df_generate}
 \title{Generate GenBank records data.frame}
 \usage{
-gb_df_generate(records, min_length = 0, max_length = NULL)
+gb_df_generate(
+  records,
+  min_length = 0,
+  max_length = NULL,
+  acc_filter = NULL,
+  invert = FALSE
+)
 }
 \arguments{
 \item{records}{character, vector of GenBank records in text format}
@@ -12,9 +18,16 @@ gb_df_generate(records, min_length = 0, max_length = NULL)
 \item{min_length}{Minimum sequence length, default 0.}
 
 \item{max_length}{Maximum sequence length, default NULL.}
+
+\item{acc_filter}{Character vector; accessions to include or exclude from
+the database as specified by \code{invert}.}
+
+\item{invert}{Logical vector of length 1; if TRUE, accessions in \code{acc_filter}
+will be excluded from the database; if FALSE, only accessions in \code{acc_filter}
+will be included in the database. Default FALSE.}
 }
 \value{
-data.frame
+data.frame, or NULL if no records pass filters
 }
 \description{
 For a list of records, construct a data.frame
@@ -27,57 +40,79 @@ The prefix 'raw_' indicates the data has been converted to the
 raw format, see ?charToRaw, in order to save on RAM.
 The raw_record contains the entire GenBank record in text format.
 
-Use max and min sequence lengths to minimise the size of the database.
-All sequences have to be at least as long as min and less than or equal
-in length to max, unless max is NULL in which there is no maximum length.
+Use \code{acc_filter} and max and min sequence lengths to minimize the size of the
+database. All sequences have to be at least as long as min and less than or
+equal in length to max, unless max is NULL in which there is no maximum
+length. The final selection of sequences is the result of applying all
+filters (\code{acc_filter}, \code{min_length}, \code{max_length}) in combination.
 }
 \seealso{
-Other private: \code{\link{add_rcrd_log}},
-  \code{\link{cat_line}}, \code{\link{char}},
-  \code{\link{check_connection}}, \code{\link{cleanup}},
-  \code{\link{connected}}, \code{\link{connection_get}},
-  \code{\link{custom_download2}},
-  \code{\link{custom_download}},
-  \code{\link{db_sqlngths_get}},
-  \code{\link{db_sqlngths_log}}, \code{\link{dir_size}},
-  \code{\link{dwnld_path_get}},
-  \code{\link{dwnld_rcrd_log}},
-  \code{\link{entrez_fasta_get}},
-  \code{\link{entrez_gb_get}},
-  \code{\link{extract_accession}},
-  \code{\link{extract_by_patterns}},
-  \code{\link{extract_clean_sequence}},
-  \code{\link{extract_definition}},
-  \code{\link{extract_features}},
-  \code{\link{extract_inforecpart}},
-  \code{\link{extract_keywords}},
-  \code{\link{extract_locus}},
-  \code{\link{extract_organism}},
-  \code{\link{extract_seqrecpart}},
-  \code{\link{extract_sequence}},
-  \code{\link{extract_version}},
-  \code{\link{file_download}}, \code{\link{filename_log}},
-  \code{\link{flatfile_read}}, \code{\link{gb_build2}},
-  \code{\link{gb_build}}, \code{\link{gb_df_create}},
-  \code{\link{gb_sql_add}}, \code{\link{gb_sql_query}},
-  \code{\link{gbrelease_check}},
-  \code{\link{gbrelease_get}}, \code{\link{gbrelease_log}},
-  \code{\link{has_data}},
-  \code{\link{identify_downloadable_files}},
-  \code{\link{last_add_get}}, \code{\link{last_dwnld_get}},
-  \code{\link{last_entry_get}},
-  \code{\link{latest_genbank_release_notes}},
-  \code{\link{latest_genbank_release}},
-  \code{\link{message_missing}}, \code{\link{mock_def}},
-  \code{\link{mock_gb_df_generate}},
-  \code{\link{mock_org}}, \code{\link{mock_rec}},
-  \code{\link{mock_seq}}, \code{\link{predict_datasizes}},
-  \code{\link{print.status}}, \code{\link{quiet_connect}},
-  \code{\link{readme_log}},
-  \code{\link{restez_path_check}}, \code{\link{restez_rl}},
-  \code{\link{seshinfo_log}}, \code{\link{setup}},
-  \code{\link{slctn_get}}, \code{\link{slctn_log}},
-  \code{\link{sql_path_get}}, \code{\link{status_class}},
-  \code{\link{stat}}, \code{\link{testdatadir_get}}
+Other private: 
+\code{\link{add_rcrd_log}()},
+\code{\link{cat_line}()},
+\code{\link{char}()},
+\code{\link{check_connection}()},
+\code{\link{cleanup}()},
+\code{\link{connected}()},
+\code{\link{connection_get}()},
+\code{\link{db_download_intern}()},
+\code{\link{db_sqlngths_get}()},
+\code{\link{db_sqlngths_log}()},
+\code{\link{dir_size}()},
+\code{\link{dwnld_path_get}()},
+\code{\link{dwnld_rcrd_log}()},
+\code{\link{entrez_fasta_get}()},
+\code{\link{entrez_gb_get}()},
+\code{\link{extract_accession}()},
+\code{\link{extract_by_patterns}()},
+\code{\link{extract_clean_sequence}()},
+\code{\link{extract_definition}()},
+\code{\link{extract_features}()},
+\code{\link{extract_inforecpart}()},
+\code{\link{extract_keywords}()},
+\code{\link{extract_locus}()},
+\code{\link{extract_organism}()},
+\code{\link{extract_seqrecpart}()},
+\code{\link{extract_sequence}()},
+\code{\link{extract_version}()},
+\code{\link{file_download}()},
+\code{\link{filename_log}()},
+\code{\link{flatfile_read}()},
+\code{\link{gb_build}()},
+\code{\link{gb_df_create}()},
+\code{\link{gb_sql_add}()},
+\code{\link{gb_sql_query}()},
+\code{\link{gbrelease_check}()},
+\code{\link{gbrelease_get}()},
+\code{\link{gbrelease_log}()},
+\code{\link{has_data}()},
+\code{\link{identify_downloadable_files}()},
+\code{\link{last_add_get}()},
+\code{\link{last_dwnld_get}()},
+\code{\link{last_entry_get}()},
+\code{\link{latest_genbank_release_notes}()},
+\code{\link{latest_genbank_release}()},
+\code{\link{message_missing}()},
+\code{\link{mock_def}()},
+\code{\link{mock_gb_df_generate}()},
+\code{\link{mock_org}()},
+\code{\link{mock_rec}()},
+\code{\link{mock_seq}()},
+\code{\link{predict_datasizes}()},
+\code{\link{print.status}()},
+\code{\link{readme_log}()},
+\code{\link{restez_connect}()},
+\code{\link{restez_disconnect}()},
+\code{\link{restez_path_check}()},
+\code{\link{restez_rl}()},
+\code{\link{search_gz}()},
+\code{\link{seshinfo_log}()},
+\code{\link{setup}()},
+\code{\link{slctn_get}()},
+\code{\link{slctn_log}()},
+\code{\link{sql_path_get}()},
+\code{\link{status_class}()},
+\code{\link{stat}()},
+\code{\link{testdatadir_get}()}
 }
 \concept{private}

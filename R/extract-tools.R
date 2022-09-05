@@ -4,6 +4,7 @@
 # EP216306 -- contig, synthetic sequences, multiple accessions
 # AACY020000000 -- wgs
 # KBQR00000000 -- targeted locus study
+# AB467315 -- feature location information over more than one line
 
 # Background ----
 #' @name extract_by_patterns
@@ -80,11 +81,32 @@ extract_seqrecpart <- function(record) {
 #' @title Extract clean sequence from sequence part
 #' @description Return clean sequence from seqrecpart of a GenBank record
 #' @param seqrecpart Sequence part of a GenBank record, character
+#' @param max_len Number: maximum number of characters allowed in a single
+#' record before splitting the record into parts. Does not affect output,
+#' but only internal calculations, so generally should not be changed.
+#' Default = 1e8.
 #' @details If element is not found, '' returned.
 #' @return character
 #' @family private
-extract_clean_sequence <- function(seqrecpart) {
-  seq <- gsub(pattern = '([0-9]|\\s+|\n|/)', replacement = '', x = seqrecpart)
+extract_clean_sequence <- function(seqrecpart, max_len = 1e8) {
+  # If number of chars in sequence part is too long for gsub(),
+  # split into chunks each no bigger than max_len chars
+  if (nchar(seqrecpart) > max_len) {
+    seqrecpart <- stringi::stri_sub(
+      seqrecpart,
+      seq(1, stringi::stri_length(seqrecpart),
+          by = max_len),
+      length = max_len
+    )
+  }
+  # Extract the DNA sequence from each part
+  seq <- paste0(
+    sapply(
+      seqrecpart,
+      function(x) gsub(pattern = '([0-9]|\\s+|\n|/)', replacement = '', x)
+    ),
+    collapse = ""
+  )
   # upper case is recommended, at least it is what rentrez returns
   toupper(seq)
 }
@@ -215,15 +237,24 @@ extract_features <- function(record) {
   features <- list()
   i <- 0
   nm <- ''
+  # identify location information
+  common_pttrn <- '\\s(complement\\()?[0-9]+(\\.\\.[0-9]+)?\\)?$'
+  join_pttrn <- '\\sjoin\\([0-9]+\\.\\.[0-9]+,'
   for (ln in features_lines) {
-    pttrn <- '\\s(complement\\()?[0-9]+(\\.\\.[0-9]+)?\\)?$'
-    with_location <- grepl(pattern = pttrn, x = ln)
+    with_location <- grepl(pattern = common_pttrn, x = ln) |
+      grepl(pattern = join_pttrn, x = ln)
     if (with_location) {
-      i <- i + 1
-      features[[i]] <- list()
+      # if location information create a new features element
       typ_location <- strsplit(x = ln, split = '\\s+')[[1]][-1]
-      features[[i]][['type']] <- typ_location[[1]]
-      features[[i]][['location']] <- typ_location[[2]]
+      if (length(typ_location) > 1) {
+        i <- i + 1
+        features[[i]] <- list()
+        features[[i]][['type']] <- typ_location[[1]]
+        features[[i]][['location']] <- typ_location[[2]]
+      } else {
+        features[[i]][['location']] <- paste0(features[[i]][['location']],
+                                              typ_location[[1]])
+      }
     } else {
       nm_value <- strsplit(x = ln, split = '=')[[1]]
       if (length(nm_value) < 2) {
@@ -262,6 +293,10 @@ extract_keywords <- function(record) {
   keyword_text <- sub(pattern = '\\.\n$', replacement = '', x = keyword_text)
   # split up
   keyword_text <- strsplit(x = keyword_text, split = ';\\s+')[[1]]
+  # patch: prevent return of "character(0)"
+  if (length(keyword_text) == 0) {
+    keyword_text <- ''
+  }
   keyword_text
 }
 

@@ -4,8 +4,7 @@
 #' @description Report to console current setup status of restez.
 #' @param gb_check Check whether last download was from latest GenBank release?
 #' Default FALSE.
-#' @details Always remember to run \code{\link{restez_connect}} before running
-#' this function. Set gb_check=TRUE to see if your downloads are up-to-date.
+#' @details Set gb_check=TRUE to see if your downloads are up-to-date.
 #' @return Status class
 #' @export
 #' @example examples/restez_status.R
@@ -20,19 +19,10 @@ restez_status <- function(gb_check = FALSE) {
     cat_line('Checking latest GenBank release ...')
     latest <- gbrelease_check()
   }
-  is_connected <- status_obj$Database$`Is database connected?`
   with_database <- status_obj$Database$`Does path exist?` &&
-    status_obj$Database$`Is database connected?` &&
     status_obj$Database$`Does the database have data?`
   if (!with_database & !with_downloads) {
     message('You need to run `db_download()` and `db_create()`')
-  }
-  if (is_connected) {
-    if (with_downloads & !with_database) {
-      message('You need to run `db_create()` and then run `restez_connect()`')
-    }
-  } else {
-    message('You need to run `restez_connect()`')
   }
   if (gb_check && !latest) {
     msg <- paste0('Not the latest GenBank release. ',
@@ -58,7 +48,7 @@ status_class <- function() {
   slctns <- paste0(slctn_get(), collapse = ', ')
   download_info <- list('Path' = flpth, 'Does path exist?' = dir.exists(flpth),
                         'N. files' = length(dwn_fls),
-                        'N. GBs' = dir_size(flpth),
+                        'Total size' = dir_size(flpth),
                         'GenBank division selections' = slctns,
                         'GenBank Release' = gbrelease_get(),
                         'Last updated' = last_dwnld_get())
@@ -66,9 +56,8 @@ status_class <- function() {
   flpth <- sql_path_get()
   sqlngths <- db_sqlngths_get()
   nseqs <- suppressWarnings(count_db_ids())
-  database_info <- list('Path' = flpth, 'Does path exist?' = dir.exists(flpth),
-                        'N. GBs' = dir_size(flpth),
-                        'Is database connected?' = connected(),
+  database_info <- list('Path' = flpth, 'Does path exist?' = file.exists(flpth),
+                        'Total size' = fs::fs_bytes(file.size(flpth)),
                         'Does the database have data?' = has_data(),
                         'Number of sequences' = nseqs,
                         'Min. sequence length' = sqlngths[['min']],

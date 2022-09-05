@@ -16,13 +16,12 @@ named vector of fasta sequences, if no results found NULL
 }
 \description{
 Get sequence and definition data in FASTA format. Equivalent to
-\code{rettype='fasta'} in \code{\link[rentrez]{entrez_fetch}}.
+\code{rettype='fasta'} in \code{\link[rentrez:entrez_fetch]{rentrez::entrez_fetch()}}.
 }
 \examples{
 library(restez)
 restez_path_set(filepath = tempdir())
 demo_db_create(n = 5)
-restez_connect()
 (fasta <- gb_fasta_get(id = 'demo_1'))
 (fastas <- gb_fasta_get(id = c('demo_1', 'demo_2')))
 
@@ -31,10 +30,13 @@ restez_connect()
 db_delete(everything = TRUE)
 }
 \seealso{
-Other get: \code{\link{gb_definition_get}},
-  \code{\link{gb_organism_get}},
-  \code{\link{gb_record_get}},
-  \code{\link{gb_sequence_get}},
-  \code{\link{gb_version_get}}
+\code{\link[=ncbi_acc_get]{ncbi_acc_get()}}
+
+Other get: 
+\code{\link{gb_definition_get}()},
+\code{\link{gb_organism_get}()},
+\code{\link{gb_record_get}()},
+\code{\link{gb_sequence_get}()},
+\code{\link{gb_version_get}()}
 }
 \concept{get}

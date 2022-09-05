@@ -30,10 +30,10 @@ records.
 
 \section{Entrez functions}{
 
-The entrez functions are wrappers to the \code{entrez_*} functions in the
+The entrez functions are wrappers to the \verb{entrez_*} functions in the
 rentrez package. e.g the restez's entrez_fetch will first try to search the
 local database, if it fails it will then call rentrez's
-\code{\link[rentrez]{entrez_fetch}} with the same arguments.
+\code{\link[rentrez:entrez_fetch]{rentrez::entrez_fetch()}} with the same arguments.
 }
 
 \section{Private/internal functions}{
@@ -43,3 +43,22 @@ curious you can read their documentation using the form
 \code{?restez:::functionname}.
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/ropensci/restez}
+  \item \url{https://docs.ropensci.org/restez/}
+  \item Report bugs at \url{https://github.com/ropensci/restez/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Joel Nitta \email{joelnitta@gmail.com} (\href{https://orcid.org/0000-0003-4719-7472}{ORCID})
+
+Authors:
+\itemize{
+  \item Dom Bennett \email{dominic.john.bennett@gmail.com} (\href{https://orcid.org/0000-0003-2722-1359}{ORCID})
+}
+
+}
+\keyword{internal}

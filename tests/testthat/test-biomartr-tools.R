@@ -1,22 +1,13 @@
 # LIBS
-library(restez)
 library(testthat)
+library(mockery)
 
 # RUNNING
-context('Testing \'biomartr-tools\'')
 test_that('check_connection() works', {
-  with_mock(
-    `RCurl::getURL` = function(...) FALSE,
-    expect_error(restez:::check_connection())
-  )
-  with_mock(
-    `RCurl::getURL` = function(...) '',
-    expect_true(restez:::check_connection())
-  )
-})
-test_that('custom_download() works', {
-  with_mock(
-    `downloader::download` = function(...) TRUE,
-    expect_null(restez:::custom_download())
-  )
+  stub(check_connection, "url_exists", TRUE)
+  expect_true(check_connection())
+  stub(check_connection, "url_exists", FALSE)
+  expect_error(
+    check_connection(),
+    "Unable to connect to")
 })

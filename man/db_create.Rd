@@ -4,8 +4,15 @@
 \alias{db_create}
 \title{Create new NCBI database}
 \usage{
-db_create(db_type = "nucleotide", min_length = 0, max_length = NULL,
-  alt_restez_path = NULL)
+db_create(
+  db_type = "nucleotide",
+  min_length = 0,
+  max_length = NULL,
+  acc_filter = NULL,
+  invert = FALSE,
+  alt_restez_path = NULL,
+  scan = FALSE
+)
 }
 \arguments{
 \item{db_type}{character, database type}
@@ -14,17 +21,39 @@ db_create(db_type = "nucleotide", min_length = 0, max_length = NULL,
 
 \item{max_length}{Maximum sequence length, default NULL.}
 
+\item{acc_filter}{Character vector; accessions to include or exclude from
+the database as specified by \code{invert}.}
+
+\item{invert}{Logical vector of length 1; if TRUE, accessions in \code{acc_filter}
+will be excluded from the database; if FALSE, only accessions in \code{acc_filter}
+will be included in the database. Default FALSE.}
+
 \item{alt_restez_path}{Alternative restez path if you would like to use the
 downloads from a different restez path.}
+
+\item{scan}{Logical vector of length 1; should the sequence file be scanned
+for accessions in \code{acc_filter} prior to processing?
+Requires zgrep to be installed (so does not work on Windows).
+Only used if \code{acc_filter} is not NULL and \code{invert} is FALSE. Default FALSE.}
 }
 \description{
 Create a new local SQL database from downloaded files.
 Currently only GenBank/nucleotide/nuccore database is supported.
 }
 \details{
-All .seq.gz files are added to the database. A user can specify sequence
-limit sizes for those sequences to be added to the database -- smaller
-databases are faster to search.
+All .seq.gz files are added to the database by default. A user can specify
+minimum/maximum sequence lengths or accession numbers to limit the sequences
+to be added to the database -- smaller databases are faster to search. The
+final selection of sequences is the result of applying all filters
+(\code{acc_filter}, \code{min_length}, \code{max_length}) in combination.
+
+The \code{scan} option can decrease the time needed to build a database if only a
+small number of sequences should be written to the database compared to the
+number of the sequences downloaded from GenBank; i.e., if many of the files
+downloaded from GenBank do not contain any sequences that should be written
+to the database. When set to TRUE, if a file does not contain any of the
+accessions in \code{acc_filter}, further processing of that file will be skipped
+and none of the sequences it contains will be added to the database.
 
 Alternatively, a user can use the \code{alt_restez_path} to add the files
 from an alternative restez file path. For example, you may wish to have a
@@ -34,23 +63,43 @@ all environmental sequences twice, you can generate multiple restez databases
 using the same downloaded files from a single restez path.
 
 This function will not overwrite a pre-existing database. Old databases must
-be deleted before a new one can be created. Use \code{\link{db_delete}} with
+be deleted before a new one can be created. Use \code{\link[=db_delete]{db_delete()}} with
 everything=FALSE to delete an SQL database.
 
 Connections/disconnections to the database are made automatically.
 }
 \examples{
 \dontrun{
+# Example of general usage
 library(restez)
 restez_path_set(filepath = 'path/for/downloads/and/database')
 db_download()
 db_create()
+
+# Example of using `acc_filter`
+#
+# Download files to temporary directory
+temp_dir <- paste0(tempdir(), "/restez", collapse = "")
+dir.create(temp_dir)
+restez_path_set(filepath = temp_dir)
+# Choose GenBank domain 20 ('unannotated'), the smallest
+db_download(preselection = 20)
+# Only include three accessions in database
+db_create(
+  acc_filter = c("AF000122", "AF000123", "AF000124")
+)
+list_db_ids()
+db_delete()
+unlink(temp_dir)
 }
 }
 \seealso{
-Other database: \code{\link{count_db_ids}},
-  \code{\link{db_delete}}, \code{\link{db_download}},
-  \code{\link{demo_db_create}}, \code{\link{is_in_db}},
-  \code{\link{list_db_ids}}
+Other database: 
+\code{\link{count_db_ids}()},
+\code{\link{db_delete}()},
+\code{\link{db_download}()},
+\code{\link{demo_db_create}()},
+\code{\link{is_in_db}()},
+\code{\link{list_db_ids}()}
 }
 \concept{database}

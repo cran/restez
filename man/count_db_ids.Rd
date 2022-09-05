@@ -22,16 +22,18 @@ Requires an open connection. If no connection or db 0 is returned.
 library(restez)
 restez_path_set(filepath = tempdir())
 demo_db_create(n = 5)
-restez_connect()
 (count_db_ids())
 
 # delete demo after example
 db_delete(everything = TRUE)
 }
 \seealso{
-Other database: \code{\link{db_create}},
-  \code{\link{db_delete}}, \code{\link{db_download}},
-  \code{\link{demo_db_create}}, \code{\link{is_in_db}},
-  \code{\link{list_db_ids}}
+Other database: 
+\code{\link{db_create}()},
+\code{\link{db_delete}()},
+\code{\link{db_download}()},
+\code{\link{demo_db_create}()},
+\code{\link{is_in_db}()},
+\code{\link{list_db_ids}()}
 }
 \concept{database}

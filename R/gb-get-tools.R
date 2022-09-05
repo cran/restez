@@ -7,17 +7,22 @@
 #' @return data.frame
 #' @family private
 gb_sql_query <- function(nm, id) {
+  on.exit(restez_disconnect())
   # reduce ids to accessions
   id <- sub(pattern = '\\.[0-9]+', replacement = '', x = id)
   qry_id <- paste0('(', paste0(paste0("'", id, "'"), collapse = ','), ')')
   qry <- paste0("SELECT accession,", nm,
                 " FROM nucleotide WHERE accession IN ", qry_id)
+  # first close any connection if one exists
+  restez_disconnect()
+  restez_connect(read_only = TRUE)
   connection <- connection_get()
   qry_res <- DBI::dbSendQuery(conn = connection, statement = qry)
   on.exit(expr = {
     DBI::dbClearResult(res = qry_res)
   })
   res <- DBI::dbFetch(res = qry_res)
+  restez_disconnect()
   res
 }
 
@@ -25,20 +30,21 @@ gb_sql_query <- function(nm, id) {
 #' @title Get fasta from GenBank
 #' @family get
 #' @description Get sequence and definition data in FASTA format. Equivalent to
-#' \code{rettype='fasta'} in \code{\link[rentrez]{entrez_fetch}}.
+#' `rettype='fasta'` in [rentrez::entrez_fetch()].
 #' @param id character, sequence accession ID(s)
 #' @param width integer, maximum number of characters in a line
 #' @return named vector of fasta sequences, if no results found NULL
 #' @export
 #' @example examples/gb_fasta_get.R
+#' @seealso [ncbi_acc_get()]
 gb_fasta_get <- function(id, width=70) {
   # TODO: separate the fasta conversion into a new function and
   #  share with phylotaR
   res <- gb_sql_query(nm = 'raw_definition,raw_sequence,version', id = id)
   cnvrt <- function(i) {
-    sq <- rawToChar(res[i, 'raw_sequence'][[1]])
+    sq <- res[i, 'raw_sequence'][[1]]
     sq <- extract_clean_sequence(sq)
-    def <- rawToChar(res[i, 'raw_definition'][[1]])
+    def <- res[i, 'raw_definition'][[1]]
     n <- nchar(sq)
     if (n > width) {
       slices <- c(seq(from = 1, to = nchar(sq), by = width), nchar(sq) + 1)
@@ -63,31 +69,50 @@ gb_fasta_get <- function(id, width=70) {
 #' @family get
 #' @description Return the sequence(s) for a record(s)
 #' from the accession ID(s).
+#' @details For more information about the `dnabin` format, see [ape::DNAbin()].
 #' @param id character, sequence accession ID(s)
+#' @param dnabin Logical vector of length 1; should the sequences
+#' be returned using the bit-level coding scheme of the ape package?
+#' Default FALSE.
 #' @return named vector of sequences, if no results found NULL
 #' @export
 #' @example examples/gb_sequence_get.R
-gb_sequence_get <- function(id) {
+#' @seealso [ncbi_acc_get()]
+gb_sequence_get <- function(id, dnabin = FALSE) {
+
+  assertthat::assert_that(assertthat::is.flag(dnabin))
+  assertthat::assert_that(is.character(id))
+
   res <- gb_sql_query(nm = 'raw_sequence', id = id)
-  sqs <- lapply(res[['raw_sequence']], rawToChar)
+  sqs <- res[['raw_sequence']]
   sqs <- lapply(sqs, extract_clean_sequence)
   names(sqs) <- res[['accession']]
-  unlist(sqs)
+  sqs <- unlist(sqs)
+
+  if (isTRUE(dnabin)) {
+    sq_names <- names(sqs)
+    sqs <- ape::as.DNAbin(strsplit(sqs, ""))
+    names(sqs) <- sq_names
+  }
+
+  return(sqs)
+
 }
 
 #' @name gb_record_get
 #' @title Get record from GenBank
 #' @family get
 #' @description Return the entire GenBank record for an accession ID.
-#' Equivalent to \code{rettype='gb'} in \code{\link[rentrez]{entrez_fetch}}.
+#' Equivalent to `rettype='gb'` in [rentrez::entrez_fetch()].
 #' @param id character, sequence accession ID(s)
 #' @return named vector of records, if no results found NULL
 #' @export
 #' @example examples/gb_record_get.R
+#' @seealso [ncbi_acc_get()]
 gb_record_get <- function(id) {
   res <- gb_sql_query(nm = 'raw_record,raw_sequence', id = id)
-  rcs <- lapply(X = res[['raw_record']], FUN = rawToChar)
-  seqs <- lapply(X = res[['raw_sequence']], FUN = rawToChar)
+  rcs <- res[['raw_record']]
+  seqs <- res[['raw_sequence']]
   with_seq <- which(vapply(X = seqs, FUN = function(x) x != '', logical(1)))
   # stick inf and seq together to make complete record
   # inverse of '\nORIGIN\\s+\n\\s+1\\s+'
@@ -107,9 +132,10 @@ gb_record_get <- function(id) {
 #' @return named vector of definitions, if no results found NULL
 #' @export
 #' @example examples/gb_definition_get.R
+#' @seealso [ncbi_acc_get()]
 gb_definition_get <- function(id) {
   res <- gb_sql_query(nm = 'raw_definition', id = id)
-  dfs <- lapply(res[['raw_definition']], rawToChar)
+  dfs <- res[['raw_definition']]
   names(dfs) <- res[['accession']]
   unlist(dfs)
 }
@@ -123,6 +149,7 @@ gb_definition_get <- function(id) {
 #' @return named vector of definitions, if no results found NULL
 #' @export
 #' @example examples/gb_organism_get.R
+#' @seealso [ncbi_acc_get()]
 gb_organism_get <- function(id) {
   res <- gb_sql_query(nm = 'organism', id = id)
   if (nrow(res) == 0) {
@@ -142,6 +169,7 @@ gb_organism_get <- function(id) {
 #' @return named vector of versions, if no results found NULL
 #' @export
 #' @example examples/gb_version_get.R
+#' @seealso [ncbi_acc_get()]
 gb_version_get <- function(id) {
   res <- gb_sql_query(nm = 'version', id = id)
   vrs <- paste0(res[['accession']], '.', res[['version']])

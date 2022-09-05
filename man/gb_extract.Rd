@@ -4,8 +4,11 @@
 \alias{gb_extract}
 \title{Extract elements of a GenBank record}
 \usage{
-gb_extract(record, what = c("accession", "version", "organism",
-  "sequence", "definition", "locus", "features", "keywords"))
+gb_extract(
+  record,
+  what = c("accession", "version", "organism", "sequence", "definition", "locus",
+    "features", "keywords")
+)
 }
 \arguments{
 \item{record}{GenBank record in text format, character}
@@ -24,7 +27,6 @@ This function uses a REGEX to extract particular elements of a
 GenBank record. All of the what options return a single character with the
 exception of 'locus' or 'keywords' that return character vectors and
 'features' that returns a list of lists for all features.
-
 
 The accuracy of these functions cannot be guaranteed due to the enormity of
 the GenBank database. But the function is regularly tested on a range of

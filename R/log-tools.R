@@ -17,7 +17,7 @@ readme_log <- function() {
                    ' added etc. Please provide this logged information if you ',
                    'raise a bug.',
                    ' It is best to raise any bug via GitHub issues:\n',
-                   'https://github.com/AntonelliLab/restez/issues')
+                   'https://github.com/ropensci/restez/issues')
   write(x = readme, file = flpth)
 }
 
@@ -28,7 +28,7 @@ readme_log <- function() {
 #' @family private
 seshinfo_log <- function() {
   flpth <- file.path(restez_path_get(), 'session_info.txt')
-  session_info <- devtools::session_info()
+  session_info <- sessioninfo::session_info()
   write(x = 'SYSTEM\n', file = flpth)
   utils::capture.output(session_info[[1]], file = flpth, append = TRUE)
   write(x = '\nPACKAGES\n', file = flpth, append = TRUE)
@@ -55,7 +55,7 @@ db_sqlngths_log <- function(min_lngth, max_lngth) {
 #' @name slctn_log
 #' @title Log the GenBank selection made by a user
 #' @description This function is called whenever a user makes a selection with
-#' the \code{\link{db_download}}. It records GenBank numbers selections.
+#' the [db_download()]. It records GenBank numbers selections.
 #' @param selection selected GenBank sequences, named vector
 #' @return NULL
 #' @family private
@@ -243,7 +243,7 @@ dir_size <- function(fp) {
   fls <- file.path(fp, fls)
   totsz <- sum(vapply(X = fls, FUN = file.size, FUN.VALUE = double(1)),
                  na.rm = TRUE)
-  round(x = totsz / 1E9, digits = 2)
+  fs::fs_bytes(totsz)
 }
 
 #' @name gbrelease_check

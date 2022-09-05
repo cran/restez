@@ -28,8 +28,8 @@ Attempts to first search local database with user-specified
 parameters, if the record is missing in the database, the function then
 calls rentrez::entrez_fetch to search GenBank remotely.
 
-\code{rettype='fasta'} and \code{rettype='gb'} are respectively equivalent to 
-\code{\link{gb_fasta_get}} and \code{\link{gb_record_get}}.
+\code{rettype='fasta'} and \code{rettype='gb'} are respectively equivalent to
+\code{\link[=gb_fasta_get]{gb_fasta_get()}} and \code{\link[=gb_record_get]{gb_record_get()}}.
 }
 \note{
 It is advisable to call restez and rentrez functions with '::' notation
@@ -46,7 +46,6 @@ are also not supported.
 library(restez)
 restez_path_set(tempdir())
 demo_db_create(n = 5)
-restez_connect()
 # return fasta record
 fasta_res <- entrez_fetch(db = 'nucleotide',
                           id = c('demo_1', 'demo_2'),
@@ -70,6 +69,6 @@ cat(gb_res)
 db_delete(everything = TRUE)
 }
 \seealso{
-\code{\link[rentrez]{entrez_fetch}}
+\code{\link[rentrez:entrez_fetch]{rentrez::entrez_fetch()}}
 }
 \concept{entrez}

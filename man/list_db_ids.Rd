@@ -28,7 +28,6 @@ restez_path_set(filepath = tempdir())
 demo_db_create(n = 5)
 # Warning: not recommended for real databases
 #  with potentially millions of IDs
-restez_connect()
 all_ids <- list_db_ids()
 
 
@@ -37,8 +36,8 @@ all_ids <- list_db_ids()
 seqs <- gb_sequence_get(id = all_ids)
 defs <- gb_definition_get(id = all_ids)
 # paste together
-fasta_seqs <- paste0('>', defs, '\\n', seqs)
-fasta_file <- paste0(fasta_seqs, collapse = '\\n')
+fasta_seqs <- paste0('>', defs, '\n', seqs)
+fasta_file <- paste0(fasta_seqs, collapse = '\n')
 cat(fasta_file)
 
 
@@ -46,9 +45,12 @@ cat(fasta_file)
 db_delete(everything = TRUE)
 }
 \seealso{
-Other database: \code{\link{count_db_ids}},
-  \code{\link{db_create}}, \code{\link{db_delete}},
-  \code{\link{db_download}}, \code{\link{demo_db_create}},
-  \code{\link{is_in_db}}
+Other database: 
+\code{\link{count_db_ids}()},
+\code{\link{db_create}()},
+\code{\link{db_delete}()},
+\code{\link{db_download}()},
+\code{\link{demo_db_create}()},
+\code{\link{is_in_db}()}
 }
 \concept{database}
