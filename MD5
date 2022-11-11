@@ -1,12 +1,12 @@
-cdecdd65739e91205aff14ad4f6fbe63 *DESCRIPTION
+8582024e01ddcc40210c2854b63425bd *DESCRIPTION
 b6ebe2284f9711f84a8f0b19a4e57367 *LICENSE
 810278403c369611dcf39f40cf8680e1 *NAMESPACE
-924814d41eb610ba391fb453bd87c921 *NEWS.md
+98256ad7ca709d24dc89eeb55d34bd31 *NEWS.md
 2afa0ae38a3a0288e54dc51a738b0197 *R/biomartr-tools.R
 38aabffdc79f7beeaf395cd77aa7da54 *R/connection-tools.R
 dc9a022ecc3ff5347abc3edf03f32b25 *R/db-get-tools.R
 36a09063d56f7ed0dba24a20cfd2b9e4 *R/db-setup-tools.R
-39b18ec61fc7599f57f8274d199e8f7b *R/download-tools.R
+181a8a710452e02791492801924dbacd *R/download-tools.R
 6026c2e8d53688a1ff8457ff9f9a7503 *R/entrez-tools.R
 d7b5cfebcd0f656fd209864c97baea3e *R/extract-tools.R
 bb6e10a5ffc6f22800da9c6c0c2e038a *R/filepath-tools.R
@@ -20,7 +20,7 @@ aea01c6b32c7d8b89fdb54f04c8290e2 *R/rentrez-wrappers.R
 16cd59e1623d1cf44b2624514566f250 *R/status-tools.R
 6d751daae70ec0100a40f38a30184a22 *R/test-tools.R
 8abb57e7f45169f2e6e48da80ec814da *R/wrappers.R
-699c4990bd0035ecd31c8c5124f9750c *README.md
+25a315bc220031ce83e3c8210df5ef35 *README.md
 c3872bec72cd8166ad0b6aafbab16058 *data/record.rda
 968401891a6e75eaaf8f29a254cdaa81 *inst/CITATION
 08d3b86e02489c2efb5a31e049d86c59 *man/add_rcrd_log.Rd
@@ -94,7 +94,7 @@ ecc57bc560aed227b416eca3d21348c3 *man/ncbi_acc_get.Rd
 50bde585f2639e596d96c9af3f51ea88 *man/print.status.Rd
 1324578442feb83c91c8127c90f54857 *man/readme_log.Rd
 94d9648f99afc47ee2eaaecd5c94cfe2 *man/record.Rd
-0dc4e61348886092f6b9950bb53c23f3 *man/restez.Rd
+6ebbe74bac22eddd25ae4effaf9892d5 *man/restez.Rd
 563e66ce160ae26e352de8f21d150e89 *man/restez_connect.Rd
 2c45528d4653b6fb1529d4d804046d80 *man/restez_disconnect.Rd
 d0cb1d0a77ca45cde1bd2573ab6f3513 *man/restez_path_check.Rd
